@@ -374,8 +374,8 @@ module.exports = {
   Payment,
   Equipment,
   Branch,
+  WorkoutPlan,
   Attendance,
   Review,
   Notification,
-  WorkoutPlan
 };
