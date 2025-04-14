@@ -1,4 +1,4 @@
-# my-mern-project
+# Gym-Managment-System
 
 Full MERN Stack project using:
 - React + Vite (Frontend)
