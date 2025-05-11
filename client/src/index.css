@@ -1,68 +1,154 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer utilities {
+    .small-text {@apply text-[10px] md:text-[12px];}
+    .normal-text {@apply text-[11px] md:text-[14px];}
+    .medium-text {@apply text-[12px] md:text-[16px];}
+    .large-text {@apply text-[12px] md:text-[18px];}
+    .xlarge-text {@apply text-[16px] md:text-[20px];}
+    .xxlarge-text {@apply text-[18px] md:text-[22px];}
+    .xxxlarge-text {@apply text-[20px] md:text-[24px];}
+    .title-text {@apply text-[24px] md:text-[32px];}
+    .super-title-text {@apply text-[20px] md:text-[44px] font-[700] md:leading-[55px];}
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+@font-face {
+  font-family: 'Aviner';
+  src: local('Aviner'), url(/fonts/Aviner.otf) format('truetype');
 }
-a:hover {
-  color: #535bf2;
-}
+
+/* * {outline: 1px solid red;} */
+
 
 body {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Aviner, sans-serif;
+}
+
+.pattern {
+  position: absolute;
+  inset: 0;
+  background: url('/textures/surface.png');
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.footer-polygon, .hero-polygon {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: end;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  padding: 20px;
+  overflow: hidden;
+  @apply relative text-white bg-gradient-to-b from-black/100 from-22% to-[#242372] 
+  [clip-path:polygon(0%_15%,100%_0%,100%_100%,0%_100%)] md:[clip-path:polygon(0%_20%,100%_0%,100%_100%,0%_100%)];
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.hero-polygon {
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0% 100%);
+  @apply absolute top-0 text-white bg-gradient-to-l from-black/100 from-40% to-[#242372] justify-start md:justify-center;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.footer-polygon::after, .hero-polygon::after, .menu::after, .return::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('/textures/surface.png');
+  opacity: 0.07;
+  pointer-events: none;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.hover-zoom {
+  @apply transition-transform duration-300 hover:scale-105 cursor-pointer;
+}
+
+.btn-gradient {
+  @apply  bg-gradient-to-r from-black/100 to-[#242372] to-70%;
+}
+
+.big-shape {
+  position: absolute;
+  top: 100px;
+  right: -5px;
+  width: 200px;
+  height: 70px;
+  transform: rotate(354deg) skew(-10deg);
+  background-color: #26255b78;
+  pointer-events: none;
+}
+.small-shape {
+  position: absolute;
+  top: 70%;
+  left: -5px;
+  width: 160px;
+  height: 40px;
+  transform: rotate(354deg) skew(-10deg);
+  background-color: #26255b78;
+  pointer-events: none;
+}
+.small1-shape {
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  width: 160px;
+  height: 40px;
+  transform: rotate(354deg) skew(-10deg);
+  background-color: #26255b;
+  pointer-events: none;
+}
+.outline-shape {
+  position: absolute;
+  top: 40%;
+  left: -5px;
+  width: 200px;
+  height: 70px;
+  transform: rotate(354deg) skew(-10deg);
+  background-color: transparent;
+  border: 1px solid #ffffff37;
+  pointer-events: none;
+}
+.big1-shape {
+  position: absolute;
+  top: 30%;
+  left: 45%;
+  height: 140px;
+  transform: rotate(354deg) skew(-10deg);
+  pointer-events: none;
+  @apply bg-gradient-to-l from-[#242372]/40 to-[#242372]/20 w-[190px] md:w-[400px];
+}
+.colored1-shape {
+  position: absolute;
+  top: 15%;
+  right: -10px;
+  width: 300px;
+  height: 50px;
+  transform: rotate(354deg) skew(-10deg);
+  pointer-events: none;
+  @apply bg-gradient-to-r from-[#908EF4]/86 to-[#0097FE]/20;
+}
+.colored2-shape {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 300px;
+  height: 50px;
+  transform: rotate(354deg) skew(-10deg);
+  pointer-events: none;
+  @apply bg-gradient-to-r from-[#908EF4]/86 to-[#0097FE]/20;
+}
+
+.social-icon {
+  @apply w-[34px] h-[34px] md:w-[48px] md:h-[48px] flex justify-center items-center 
+  bg-white/20 rounded-[5px] transition-all duration-300 hover:scale-105;
+  img {
+    @apply w-[20px] md:w-[32px];
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+.header-link {
+  @apply rounded-[10px] hover:bg-white/20 py-[5px] px-[10px] transition-all duration-300;
 }
