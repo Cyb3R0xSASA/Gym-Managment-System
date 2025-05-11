@@ -2,16 +2,15 @@ import Footer from "./layouts/Footer"
 import Header from "./layouts/Header"
 import { Route, Routes } from "react-router-dom"
 import NotFound from "./pages/NotFound"
-import UnderConst from "./pages/UnderConstruction"
 import Partners from "./pages/Partners"
-
+import Home from "./pages/Home"
 function App() {
   return (
     <div dir="rtl" className="relative">
       <div className="pattern"/>
       <Header />
       <Routes>
-          <Route path="/" element={<UnderConst />} />
+          <Route path="/" element={<Home />} />
           <Route path="/partners" element={<Partners />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
