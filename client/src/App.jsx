@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Footer from "./layouts/Footer"
+import Header from "./layouts/Header"
+import { Route, Routes } from "react-router-dom"
+import NotFound from "./pages/NotFound"
+import UnderConst from "./pages/UnderConstruction"
+import Partners from "./pages/Partners"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div dir="rtl" className="relative">
+      <div className="pattern"/>
+      <Header />
+      <Routes>
+          <Route path="/" element={<UnderConst />} />
+          <Route path="/partners" element={<Partners />} />
+          <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </div>
   )
 }
 
 export default App
+
+
+{/* <Hero 
+title={'إختر الخطة المناسبة لبرنامج إدارة صالتك الرياضية'} 
+subtitle={'لدينا العديد من الخطط القوية المصممة خصيصاً لتناسب متطلباتك وتحقق أقصى استفادة ممكنة من البرنامج'}
+content={
+  <div>
+    <button className="px-[15px] py-[10px] border rounded-[10px] normal-text hover-zoom">أنشئ برنامج مخصص  ←</button>
+    <div className="w-[500px] h-[500px] bg-amber-200"/>
+  </div>
+}
+/> */}
