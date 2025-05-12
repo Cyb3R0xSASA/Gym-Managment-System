@@ -22,7 +22,7 @@ const gymSchema = new Schema({
         url: { type: String, required: true },
     }],
     owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    status: { type: String, enum: ['active', 'trail', 'suspended'], default: 'trail' },
+    status: { type: String, enum: ['active', 'trial', 'suspended'], default: 'trial' },
     isActive: { type: Boolean, default: false },
 }, {timestamps: true});
 
