@@ -59,3 +59,52 @@ A scalable SaaS backend for managing gyms, employees, trainers, and clients, bui
 - **Usage:** Import `logger` and use `logger.info`, `logger.error`, etc., throughout your app.
 
 ---
+## Model Files
+
+### 1. models/plan.models.js
+- **Purpose:** Defines the subscription plans available in the system (Free, Basic, Premium, Advanced).
+- **Fields:**
+  - `name`: Object with language codes (e.g., { ar, en }) for plan name.
+  - `description`: Object with language codes for plan description.
+  - `monthlyPrice`, `semiAnnualPrice`, `annualPrice`: Pricing for each billing cycle (with minimum value 0).
+  - `semiAnnualDiscount`, `annualDiscount`: Discount rates for semi-annual and annual billing (e.g., 0.10 for 10%).
+  - `durationDays`: Number of days for the plan's billing cycle (default 30, set to 7 for Free plan).
+  - `features`: Limits for each plan (branches, employees per branch, trainers per branch, clients per branch; all required and min 1).
+  - Timestamps for creation and updates.
+- **Usage:**
+  - Plans are seeded once and referenced by gyms/subscriptions.
+  - The frontend fetches available plans for users to select during signup or upgrade.
+  - Plan limits and pricing are enforced in backend logic.
+
+### 2. models/branch.models.js
+- **Purpose:** Represents a physical branch of a gym.
+- **Fields:**
+  - `name`: Name of the branch (required).
+  - `address`: Address of the branch (required).
+  - `gym`: Reference to the parent Gym (required).
+  - Timestamps for creation and updates.
+- **Usage:**
+  - Branches are created and linked to a gym after the gym is created.
+  - The Gym model stores an array of branch references.
+  - Used to organize users, trainers, and clients by location.
+
+### 3. models/gym.models.js
+- **Purpose:** Represents a gym entity in the system, including its details, plan, branches, contact info, and owner.
+- **Fields:**
+  - `name`: Object with language codes (e.g., { ar, en }) for the gym's name.
+  - `description`: Object with language codes for the gym's description.
+  - `photo`: String for the gym's photo or logo (URL or Cloudinary ID).
+  - `plan`: Reference to the Plan model (required).
+  - `branches`: Array of references to Branch documents (added after gym creation).
+  - `contact`: Object with required `phone` and `email` fields.
+  - `socialLinks`: Array of objects, each with a `type` (social platform) and a required `url`.
+  - `owner`: Reference to the User model for the gym's owner/admin (required).
+  - `status`: String enum for gym status (`active`, `trial`, `suspended`), default is `trial`.
+  - `isActive`: Boolean flag for quick status checks, default is `false`.
+  - Timestamps for creation and updates.
+- **Usage:**
+  - Gyms are created with core details and can have branches added later.
+  - The gym references its plan, owner, and branches for organization and access control.
+  - Used as the main entity for managing employees, trainers, clients, and subscriptions.
+
+---
