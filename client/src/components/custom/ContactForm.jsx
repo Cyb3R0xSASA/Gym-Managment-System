@@ -23,7 +23,7 @@ const ContactForm = () => {
         alert('Form data submitted:', formData);
     };
 
-    const inputClasses = "w-full min-w-[350px] p-[15px] text-right bg-white rounded-[10px] card-shadow  placeholder-gray-400 text-gray-700";
+    const inputClasses = "w-full min-w-[250px] md:min-w-[350px] p-[10px] md:p-[15px] text-right bg-white rounded-[10px] card-shadow  placeholder-gray-400 text-gray-700";
 
     const formContainerVariants = {
         hidden: { opacity: 0 },
@@ -43,14 +43,14 @@ const ContactForm = () => {
     };
 
     return (
-        <div className='flex items-center gap-[20px] justify-center mx-auto'>
-            <div className='relative w-[350px] h-[450px]'>
-                <img src="/icons/location.png" alt="location" className='w-[40px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2' />
+        <div className='flex items-center gap-[20px] flex-col-reverse md:flex-row justify-center mx-auto'>
+            <div className='relative w-[250px] md:w-[350px] md:h-[450px]'>
+                <img src="/icons/location.png" alt="location" className='w-[30px] md:w-[40px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2' />
                 <img src="/images/contact.png" alt="contact" className='rounded-[20px] card-shadow' />
             </div>
             <motion.form 
                 onSubmit={handleSubmit} 
-                className="space-y-[8px] max-w-[350px]"
+                className="space-y-[8px] max-w-[250px] md:max-w-[350px]"
                 variants={formContainerVariants}
                 initial="hidden"
                 animate="visible"
