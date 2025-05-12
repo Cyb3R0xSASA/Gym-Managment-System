@@ -29,12 +29,12 @@ const Footer = () => {
                     <div className='flex flex-col items-start gap-[5px] md:gap-[10px]'>
                         <h3 className='large-text font-semibold'>الصفحات</h3>
                         <ul className='flex flex-col items-start gap-[5px] transition-all duration-300 normal-text'>
-                            <li><a href='#'>عن ترينيكس</a></li>
-                            <li><a href='#'>الخدمات والأسعار</a></li>
-                            <li><a href='#'>شركاؤنا الأوفياء</a></li>
-                            <li><a href='#'>أراء العملاء</a></li>
-                            <li><a href='#'>الأسئلة الشائعة</a></li>
-                            <li><a href='#'>اتصل بنا</a></li>
+                            <li><a href='/about'>عن ترينيكس</a></li>
+                            <li><a href='/pricing'>الخدمات والأسعار</a></li>
+                            <li><a href='/partners'>شركاؤنا الأوفياء</a></li>
+                            <li><a href='/testemonials'>أراء العملاء</a></li>
+                            <li><a href='/faq'>الأسئلة الشائعة</a></li>
+                            <li><a href='/contact'>اتصل بنا</a></li>
                         </ul>
                     </div>
                 </div>
