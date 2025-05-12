@@ -7,38 +7,38 @@ const planSchema = new Schema({
         en: { type: String, minlength: 1, maxlength: 250, unique: true },
     },
     description: {
-        ar: { type: String, minlength: 1, maxlength: 2500 },
+        ar: { type: String, minlength: 1, maxlength: 2500, required: true },
         en: { type: String, minlength: 1, maxlength: 2500 },
     },
     monthlyPrice: {
         type: Number,
         default: 0,
         min: 0,
+        required: true,
     },
     semiAnnualPrice: {
         type: Number,
         default: 0,
         min: 0,
+        required: true,
     },
     annualPrice: {
         type: Number,
         default: 0,
         min: 0,
+        required: true,
     },
     semiAnnualDiscount: {
         type: Number,
         default: 0,
         min: 0,
+        required: true,
     },
     annualDiscount: {
         type: Number,
         default: 0,
         min: 0,
-    },
-    durationDays: {
-        type: Number,
-        default: 30,
-        min: 1,
+        required: true,
     },
     features: {
         branches: {type: Number, required: true, min: 1},

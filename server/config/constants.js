@@ -48,7 +48,7 @@ const REDIS = {
 // OTHER
 const OTHER = {
   FRONTEND_URL: process.env.CLIENT_SERVER,
-  CORS_ORIGIN: process.env.NODE_ENV === 'development' ? `${SERVER.HOST.CORS_ORIGIN_DEV}:${SERVER.PORT}` : process.env.CLIENT_SERVER,
+  CORS_ORIGIN: process.env.NODE_ENV === 'development' ? `${SERVER.HOST}:${SERVER.PORT}` : process.env.CLIENT_SERVER,
 };
 
 const HTTP_STATUS = {
@@ -68,5 +68,6 @@ export {
   SMTP,
   CLOUDINARY,
   REDIS,
-  OTHER
+  OTHER,
+  HTTP_STATUS
 };

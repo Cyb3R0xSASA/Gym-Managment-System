@@ -8,7 +8,7 @@ const commentSchema = new Schema({
 
 const messageSchema = new Schema({
     name: { type: String, required: true, minlength: 1, maxlength: 250 },
-    email: { type: String, match: /.+@.+\\..+/ },
+    email: { type: String },
     phone: { type: String, required: true},
     message: { type: String, required: true, minlength: 1, maxlength: 2500 },
 }, {timestamps: true});
