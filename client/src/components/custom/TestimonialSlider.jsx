@@ -153,9 +153,9 @@ const TestimonialSlider = () => {
     const currentTestimonials = testimonialsData.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <div className="w-full py-12 md:py-16">
-        <div className="w-full min-w-[70vw] px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-center items-center mb-10">
+        <div className="w-full py-[40px] md:py-[60px]">
+        <div className="w-full min-w-[100vw] md:min-w-[70vw] px-[14px] sm:px-[20px] lg:px-[10px]">
+            <div className="flex justify-center items-center mb-[40px]">
             <button 
                 onClick={() => paginate(1)} 
                 className="mx-2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-40"
