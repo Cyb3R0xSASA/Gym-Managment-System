@@ -8,6 +8,7 @@ import Faq from "./pages/Faq"
 import Testemonials from "./pages/Testemonials"
 import Contact from "./pages/Contact"
 import Pricing from "./pages/Pricing"
+import UnderConst from "./pages/UnderConstruction"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Header />
       <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<UnderConst />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/partners" element={<Partners />} />
           <Route path="/faq" element={<Faq />} />
