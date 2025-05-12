@@ -3,12 +3,12 @@ const {model, models, Schema} = pkg;
 
 const planSchema = new Schema({
     name: {
-        ar: { type: String, required: true },
-        en: { type: String },
+        ar: { type: String, required: true, minlength: 1, maxlength: 250, unique: true },
+        en: { type: String, minlength: 1, maxlength: 250, unique: true },
     },
     description: {
-        ar: { type: String },
-        en: { type: String },
+        ar: { type: String, minlength: 1, maxlength: 2500 },
+        en: { type: String, minlength: 1, maxlength: 2500 },
     },
     monthlyPrice: {
         type: Number,
