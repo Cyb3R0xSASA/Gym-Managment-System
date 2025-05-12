@@ -1,14 +1,13 @@
 import { createTransport } from 'nodemailer';
-import { EMAIL } from './constants.js';
+import { SMTP } from './constants.js';
 import logger from './logger.conf.js';
 
-
 export const transporter = createTransport({
-    host: EMAIL.HOST,
-    port: EMAIL.PORT,
+    host: SMTP.HOST,
+    port: SMTP.PORT,
     auth: {
         user: SMTP.USER,
-        pass: SMTP.PASS
+        pass: SMTP.PASSWORD
     },
 });
 

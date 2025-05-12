@@ -2,9 +2,7 @@ import Stripe from 'stripe';
 import { STRIPE } from './constants.js';
 import logger from './logger.conf.js';
 
-const stripe = new Stripe(STRIPE.SECRET_KEY, {
-    apiVersion: '2022-11-15',
-});
+const stripe = new Stripe(STRIPE.SECRET);
 
 if (stripe) {
     logger.info('Stripe configured successfully');
