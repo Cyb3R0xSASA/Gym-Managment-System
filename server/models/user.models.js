@@ -5,11 +5,13 @@ const {model, models, Schema} = pkg;
 const userSchema = new Schema({
     firstName: { type: String, required: true, minlength: 1, maxlength: 250 },
     lastName: { type: String, required: true, minlength: 1, maxlength: 250 },
-    email: { type: String, required: true, unique: true, match: /.+@.+\\..+/ },
-    password: { type: String, required: true, select: false },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true, minlength: 8, maxlength: 128, select: false },
     role: { type: String, enum: ['admin', 'employee', 'trainer', 'client'], required: true },
     gym: { type: Schema.Types.ObjectId, ref: 'Gym' },
     branch: { type: Schema.Types.ObjectId, ref: 'Branch' },
+    plan: { type: Schema.Types.ObjectId, ref: 'Plan' },
+    planType: { type: String, enum: ['monthly', 'yearly', 'weekly', 'daily'] },
     photo: { type: String },
     gender: { type: String, enum: ['male', 'female'] },
     details: {

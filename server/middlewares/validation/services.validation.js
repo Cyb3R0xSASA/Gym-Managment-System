@@ -1,6 +1,5 @@
 import Joi from 'joi';
-import { errorMessage } from '../../utils/error.js';
-import { HTTP_STATUS } from '../../config/constants.js';
+import { validate } from '../../utils/validate.js';
 
 const commentSchema = Joi.object({
     content: Joi.string().min(1).max(2500).required(),
@@ -13,21 +12,9 @@ const messageSchema = Joi.object({
     message: Joi.string().min(1).max(2500).required(),
 });
 
-const validateComment = (req, _, next) => {
-    const { error } = commentSchema.validate(req.body);
-    const message = error ? 'l2wa49h5': '9ka4gf04';
-    if (error || !req.body) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, message));
-    next();
+const ServicesValidation = {
+    commentSchema: validate(commentSchema),
+    messageSchema: validate(messageSchema),
 };
 
-const validateMessage = (req, _, next) => {
-    const { error } = messageSchema.validate(req.body);
-    const message = error ? 'l2wa49h5': '9ka4gf04';
-    if (error || !req.body) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, message));
-    next();
-};
-
-export {
-    validateComment,
-    validateMessage,
-};
+export default ServicesValidation;

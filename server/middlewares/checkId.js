@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { HTTP_STATUS } from '../config/constants.js';
-import { errorMessage } from './error.js';
+import { errorMessage } from '../utils/error.js';
 
 const checkId = (req, _, next) => {
     const { id } = req.params;

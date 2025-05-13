@@ -11,11 +11,12 @@ export const transporter = createTransport({
     },
 });
 
-transporter.verify((error, success) => {
+
+transporter.verify((error) => {
     if (error)
         logger.error(`Email transporter error: ${error}`);
-
-    logger.info(`Email transporter configured successfully: ${success}`);
+    else
+        logger.info(`Email transporter configured successfully`);
 });
 
 export default transporter

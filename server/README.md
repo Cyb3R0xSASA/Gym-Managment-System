@@ -143,3 +143,33 @@ A scalable SaaS backend for managing gyms, employees, trainers, and clients, bui
   - Stores sender information and message content for follow-up.
 
 ---
+
+## API Endpoints
+
+### Plans Endpoints
+
+- **GET `/api/v1/plans`**  
+  Retrieve a list of all available subscription plans.  
+  **Access:** Public
+
+- **POST `/api/v1/plans`**  
+  Create a new subscription plan.  
+  **Access:** Protected (trainix admin-only)  
+  **Validation:** Uses `validatePlan` middleware to ensure request body is valid.
+
+- **PUT `/api/v1/plans/:id`**  
+  Update an existing plan by its ID.  
+  **Access:** Protected (trainix admin-only)  
+  **Validation:** Uses `validatePlan` and `checkId` middleware.
+
+- **DELETE `/api/v1/plans/:id`**  
+  Delete a plan by its ID.  
+  **Access:** Protected (trainix admin-only)  
+  **Validation:** Uses `checkId` middleware.
+
+**Notes:**
+- All endpoints use controller methods from `controllers/v1/plans.controller.js`.
+- Validation and ID checking are handled by dedicated middleware.
+- Only admins should be allowed to create, update, or delete plans (enforce this in your controllers or middleware).
+
+---

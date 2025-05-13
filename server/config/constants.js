@@ -17,6 +17,7 @@ const DATABASE = {
 const JWT = {
   REFRESH: process.env.JWT_REFRESH_KEY,
   SECRET: process.env.JWT_SECRET_KEY,
+  ROLE: process.env.JWT_ROLE_KEY,
 };
 
 // STRIPE
@@ -30,7 +31,7 @@ const SMTP = {
   HOST: process.env.SMTP_HOST,
   PORT: process.env.SMTP_PORT,
   USER: process.env.SMTP_USER,
-  PASS: process.env.SMTP_PASSWORD,
+  PASSWORD: process.env.SMTP_PASSWORD,
 };
 
 // CLOUDINARY
@@ -60,6 +61,13 @@ const HTTP_STATUS = {
   NOT_FOUND: 'not found',
 };
 
+const OTP_CONF = {
+  MAX_OTP_PER_DAY: 5,
+  OTP_TTL_SECONDS: 300,
+  OTP_LIMIT_TTL: 86400,
+  COOLDOWN_SECONDS: 60,
+};
+
 export { 
   SERVER,
   DATABASE,
@@ -69,5 +77,6 @@ export {
   CLOUDINARY,
   REDIS,
   OTHER,
-  HTTP_STATUS
+  HTTP_STATUS,
+  OTP_CONF
 };

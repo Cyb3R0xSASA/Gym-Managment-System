@@ -5,6 +5,7 @@ const errors = {
     'lj63i2v4': 'Plan already exists',
     's69j26pj': 'Plan not found',
     'mw56yn26': 'Invalid id',
+    '2m12nj8k': 'User already exists',
 };
 
 export default errors;

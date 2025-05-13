@@ -1,6 +1,5 @@
 import Joi from 'joi';
-import { HTTP_STATUS } from '../../config/constants.js';
-import { errorMessage } from '../../utils/error.js';
+import { validate } from '../../utils/validate.js';
 
 const planSchema = Joi.object({
     name: Joi.object({ar: Joi.string().required(), en: Joi.string()}),
@@ -18,11 +17,8 @@ const planSchema = Joi.object({
     }).required(),
 });
 
-const validatePlan = (req, _, next) => {
-    const { error } = planSchema.validate(req.body);
-    const message = error ? 'l2wa49h5': '9ka4gf04';
-    if (error || !req.body) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, message));
-    next();
+const PlansValidation = {
+    planSchema: validate(planSchema),
 };
 
-export default validatePlan;
+export default PlansValidation;

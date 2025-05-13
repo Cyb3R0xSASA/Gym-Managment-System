@@ -1,6 +1,8 @@
 import { createLogger, format, transports } from "winston";
 import { SERVER } from './constants.js';
+import path from 'path';
 
+const __dirname = path.resolve();
 const isProduction = SERVER.NODE_ENV === 'production';
 
 const logger = createLogger({
@@ -13,8 +15,8 @@ const logger = createLogger({
         new transports.Console(),
         ...(isProduction
             ? [
-                new transports.File({ filename: 'logs/error.log', level: 'error' }),
-                new transports.File({ filename: 'logs/combined.log' })
+                new transports.File({ filename: path.join(__dirname, 'logs/error.log'), level: 'error' }),
+                new transports.File({ filename: path.join(__dirname, 'logs/combined.log') })
             ]
             : []),
     ],

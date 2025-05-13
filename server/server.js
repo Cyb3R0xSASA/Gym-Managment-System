@@ -9,6 +9,8 @@ import { routeError } from './middlewares/error/route.error.js';
 import connectDB from './config/db.conf.js';
 import serviceRouter from './routes/services.route.js';
 import plansRouter from './routes/v1/plans.route.js';
+import authRouter from './routes/v1/auth.route.js';
+
 const app = express();
 
 app.use(cors({
@@ -25,7 +27,7 @@ app.use(urlencoded({ extended: true }));
 
 app.use('/api/v1/services', serviceRouter);
 app.use('/api/v1/plans', plansRouter);
-
+app.use('/api/v1/auth', authRouter);
 app.get('/', (req, res) => {
     res.send('ربنا يكرمنا يا ونخلص علي خير');
 });
