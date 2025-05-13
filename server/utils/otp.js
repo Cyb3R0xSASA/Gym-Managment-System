@@ -17,9 +17,10 @@ const otpGenerator = async (user, next, subject) => {
     if (await redis.exists(coolDownKey))
         return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 429, {waitTime: await redis.ttl(coolDownKey)}, `Too many requests, please try again after ${await redis.ttl(coolDownKey)} seconds`));
 
-    if(attempts && attempts >= OTP_CONF.MAX_OTP_PER_DAY)
+    if(attempts && attempts === OTP_CONF.MAX_OTP_PER_DAY){
+        await redis.del(otpKey);
         next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 429, null, { message: 'You reached for max requests of OTP for today' }));
-
+    }
     const otp = randomOTPGenerator();
     await redis.set(otpKey, hashSync(otp, genSaltSync(10)), 'EX', OTP_CONF.OTP_TTL_SECONDS);
     await redis.incr(limitKey);

@@ -7,7 +7,6 @@ import { HTTP_STATUS } from '../../config/constants.js';
 import { otpGenerator, deleteOTP } from '../../utils/otp.js';
 import bcrypt from 'bcrypt';
 import { redis } from '../../config/redis.conf.js';
-import checkId  from '../../middlewares/checkId.js';
 import { Types } from 'mongoose';
 
 const register = methodError(
@@ -81,16 +80,78 @@ const verifyEmail = methodError(
     }
 );
 
-const resendVerificationEmail = methodError();
-
+const resendVerificationEmail = methodError(
+    async (req, res, next) => {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if(user.isActive) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'User is already verified'));
+        if (!user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+        if(!await redis.get(`otp_key:${user._id}`)) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Resend OTP after 1 minute'));
+        await otpGenerator(user, next, 'Verify Email');
+        const accessToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'SECRET', '15m');
+        const refreshToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'REFRESH', '7d');
+        await JWTMethods.storeToken(`refresh_token:${user._id}`, refreshToken, 7 * 24 * 60 * 60);
+        JWTMethods.setCookies(res, accessToken, refreshToken);
+        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: {
+            accessToken,
+            refreshToken
+        }, message: 'Verification email sent successfully' });
+    }
+);
 
 const login = methodError(
     async (req, res, next) => {
         const {email, password} = req.body;
+
+        const user = await User.findOne({email}).select('+password');
+        if(!user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+
+        if(!user.isActive) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Account is not verified'));
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, '2v7s2g5s'));
+
+        const accessToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'SECRET', '15m');
+        const refreshToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'REFRESH', '7d');
+        await JWTMethods.storeToken(`refresh_token:${user._id}`, refreshToken, 7 * 24 * 60 * 60);
+        JWTMethods.setCookies(res, accessToken, refreshToken);
+
+        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: {
+            accessToken,
+            refreshToken
+        }, message: 'Login successful' });
     }
 );
-const logout = methodError();
-const refreshToken = methodError();
+
+const logout = methodError(
+    async (req, res, next) => {
+        const refreshToken = req.cookies.refreshToken;
+        if(!refreshToken) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+        await redis.del(`refresh_token:${req.user.id}`);
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: null, message: 'Logout successful' });
+    }
+);
+
+const refreshToken = methodError(
+    async (req, res, next) => {
+        const refreshToken = req.cookies.refreshToken;
+        if(!refreshToken) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+
+        const decoded = JWTMethods.verifyToken(refreshToken, 'REFRESH');
+        if(!decoded) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+        
+        const user = await User.findById(decoded.id);
+        if(!user) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+        const accessToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'SECRET', '15m');
+        JWTMethods.setCookies(res, accessToken, refreshToken);
+        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: {
+            accessToken,
+            refreshToken
+        }, message: 'Login successful' });
+    }
+);
 const forgotPassword = methodError();
 const resetPassword = methodError();
 

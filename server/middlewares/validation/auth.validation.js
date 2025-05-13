@@ -26,9 +26,20 @@ const verifyEmail = Joi.object({
     otp: Joi.number().required(),
 })
 
+const resendVerificationEmail = Joi.object({
+    email: Joi.string().email().required(),
+})
+
+const login = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required().min(8).max(128)
+})
+
 const AuthValidation = {
     register: validate(register),
     verifyEmail: validate(verifyEmail),
+    resendVerificationEmail: validate(resendVerificationEmail),
+    login: validate(login),
 }
 
 export default AuthValidation;

@@ -8,6 +8,7 @@ const errors = {
     '2m12nj8k': 'User already exists',
     'gy77yq24': 'User not found',
     'o1t6ue44': 'Unauthorized access',
+    '2v7s2g5s': 'Incorrect email or password',
 };
 
 export default errors;

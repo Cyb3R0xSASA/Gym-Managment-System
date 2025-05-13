@@ -34,7 +34,7 @@ const setCookies = (res, accessToken = null, refreshToken = null) => {
             httpOnly: true,
             secure: SERVER.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 15 * 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 };
 
