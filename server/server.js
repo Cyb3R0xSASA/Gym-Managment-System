@@ -1,23 +1,44 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const connectDB = require('./config/db');
+import express, { json, urlencoded } from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
-dotenv.config({ path: '../.env' });
+import { OTHER, SERVER } from './config/constants.js';
+import { errorResponse } from './middlewares/error/method.error.js';
+import { routeError } from './middlewares/error/route.error.js';
+import connectDB from './config/db.conf.js';
+import serviceRouter from './routes/services.route.js';
+import plansRouter from './routes/v1/plans.route.js';
+import authRouter from './routes/v1/auth.route.js';
+import gymRouter from './routes/v1/gym.route.js';
 
 const app = express();
 
 app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true,
+    origin: OTHER.CORS_ORIGIN,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use(express.json());
 
-connectDB();
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
-app.use('/api/ping', require('./routes/ping'));
+app.use('/api/v1/services', serviceRouter);
+app.use('/api/v1/plans', plansRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/gym', gymRouter);
+app.get('/', (req, res) => {
+    res.send('ربنا يكرمنا يا ونخلص علي خير');
+});
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+app.use(errorResponse);
+app.use(routeError);
+
+
+app.listen(SERVER.PORT, () => {
+    console.log(`Server is running on port ${SERVER.PORT}`);
+    connectDB();
 });
