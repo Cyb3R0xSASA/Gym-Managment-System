@@ -6,6 +6,8 @@ const errors = {
     's69j26pj': 'Plan not found',
     'mw56yn26': 'Invalid id',
     '2m12nj8k': 'User already exists',
+    'gy77yq24': 'User not found',
+    'o1t6ue44': 'Unauthorized access',
 };
 
 export default errors;

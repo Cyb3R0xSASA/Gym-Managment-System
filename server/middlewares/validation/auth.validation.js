@@ -22,8 +22,13 @@ const register = Joi.object({
     }),
 })
 
+const verifyEmail = Joi.object({
+    otp: Joi.number().required(),
+})
+
 const AuthValidation = {
     register: validate(register),
+    verifyEmail: validate(verifyEmail),
 }
 
 export default AuthValidation;
