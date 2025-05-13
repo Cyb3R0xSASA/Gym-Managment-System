@@ -7,7 +7,7 @@ const userSchema = new Schema({
     lastName: { type: String, required: true, minlength: 1, maxlength: 250 },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 8, maxlength: 128, select: false },
-    role: { type: String, enum: ['admin', 'employee', 'trainer', 'client'], required: true },
+    role: { type: String, enum: ['admin', 'employee', 'trainer', 'client', 'sasa'], required: true },
     gym: { type: Schema.Types.ObjectId, ref: 'Gym' },
     branch: { type: Schema.Types.ObjectId, ref: 'Branch' },
     plan: { type: Schema.Types.ObjectId, ref: 'Plan' },

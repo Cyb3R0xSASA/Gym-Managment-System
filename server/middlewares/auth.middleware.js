@@ -11,6 +11,13 @@ const protect = (req, res, next) => {
 
     req.user = decoded;
     next();
+};
+
+const role = (...roles) => {
+    return (req, res, next) => {
+        if(!roles.includes(req.user.role)) return next(errorMessage.create(HTTP_STATUS.UNAUTHORIZED, 401, null, 'o1t6ue44'));
+        next();
+    }
 }
 
 const isActive = (req, res, next) => {
@@ -19,4 +26,4 @@ const isActive = (req, res, next) => {
     next();
 }
 
-export { protect, isActive };
+export { protect, isActive, role };

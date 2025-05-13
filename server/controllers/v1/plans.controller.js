@@ -10,7 +10,7 @@ const getPlans = methodError(
         res.status(200).json({ 
             status: HTTP_STATUS.SUCCESS, 
             message: 'Plans fetched successfully',
-            data: { plans } 
+            plans 
         });
     }
 );

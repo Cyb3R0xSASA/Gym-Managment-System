@@ -172,4 +172,44 @@ A scalable SaaS backend for managing gyms, employees, trainers, and clients, bui
 - Validation and ID checking are handled by dedicated middleware.
 - Only admins should be allowed to create, update, or delete plans (enforce this in your controllers or middleware).
 
+### Auth Endpoints
+
+- **POST `/api/v1/auth/register`**  
+  Register a new user.  
+  - If `planId` and `planType` are provided, registers an admin for a new gym.
+  - If `code` is provided, decodes and registers as employee or trainer.
+  - Otherwise, registers as a client.
+  - Sends OTP to email for verification.
+  - Returns access and refresh tokens.
+
+- **POST `/api/v1/auth/verify-email`**  
+  Verify a user's email using OTP.  
+  - Checks OTP from Redis.
+  - Destroys OTP after 5 failed attempts.
+  - Activates user on success.
+
+- **POST `/api/v1/users/resend-otp`**  
+  Resend the email verification OTP.
+
+- **POST `/api/v1/auth/login`**  
+  Log in with email and password.  
+  - Returns access and refresh tokens.
+
+- **POST `/api/v1/auth/logout`**  
+  Log out the user (invalidate refresh token).
+
+- **POST `/api/v1/users/refresh-token`**  
+  Refresh access token using a valid refresh token.
+
+- **POST `/api/v1/users/forgot-password`**  
+  Request a password reset.
+
+- **POST `/api/v1/users/reset-password`**  
+  Reset password using a valid token.
+
+**Notes:**
+- All endpoints use controller methods from `controllers/v1/auth.controller.js`.
+- Registration and verification flows are secure and use Redis for OTP and attempt tracking.
+- Only verified users can proceed to further actions (e.g., gym creation).
+
 ---

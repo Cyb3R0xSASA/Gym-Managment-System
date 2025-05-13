@@ -10,6 +10,7 @@ import connectDB from './config/db.conf.js';
 import serviceRouter from './routes/services.route.js';
 import plansRouter from './routes/v1/plans.route.js';
 import authRouter from './routes/v1/auth.route.js';
+import gymRouter from './routes/v1/gym.route.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(urlencoded({ extended: true }));
 app.use('/api/v1/services', serviceRouter);
 app.use('/api/v1/plans', plansRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/gym', gymRouter);
 app.get('/', (req, res) => {
     res.send('ربنا يكرمنا يا ونخلص علي خير');
 });
