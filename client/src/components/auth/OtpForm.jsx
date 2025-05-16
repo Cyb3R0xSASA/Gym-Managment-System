@@ -89,7 +89,7 @@ export default function OtpForm() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     ref={(el) => (inputsRef.current[index] = el)}
-                    className="w-[50px] h-[50px] text-center text-lg border rounded-md bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] text-center text-lg border rounded-md bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.2, duration: 1, ease: "easeOut" }}

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
+import { Link } from 'react-router';
 import Hero from '../layouts/Hero';
 import { motion } from 'framer-motion';
 
@@ -99,20 +100,20 @@ const Home = () => {
                     className='mt-[20px] flex items-center gap-[10px] md:gap-[30px]'
                     variants={subtleSlideUp}
                 >
-                    <motion.a 
-                        href='#' 
+                    <Link 
+                        to='/pricing' 
                         className='hover-zoom border border-white relative medium-text text-white px-[10px] py-[8px] rounded-[10px] md:px-[20px] md:py-[10px]'
                         whileHover={buttonHoverEffect}
                     >
                         عرض الخدمات ←
-                    </motion.a>
-                    <motion.a 
-                        href='#' 
+                    </Link>
+                    <Link 
+                        to='/login' 
                         className='hover-zoom btn-gradient relative medium-text text-white px-[20px] py-[10px] rounded-[10px]'
                         whileHover={buttonHoverEffect}
                     >
                         انضم الآن
-                    </motion.a>
+                    </Link>
                 </motion.div>
                 <motion.img 
                     src='/images/Web-Dashboard-Illustration.png' 
@@ -250,7 +251,7 @@ const Home = () => {
                     </motion.div>
                 </motion.div>
                 <motion.a 
-                    href='#' 
+                    href='/about' 
                     className='hover-zoom btn-gradient return relative medium-text text-white px-[20px] py-[10px] rounded-[10px]'
                     variants={subtleSlideUp}
                     whileHover={buttonHoverEffect}
@@ -289,14 +290,14 @@ const Home = () => {
                     transition={{delay:0.2}}
                 >
                     <motion.a 
-                        href='#' 
+                        href='/contact' 
                         className='hover-zoom border border-[#242372] relative medium-text text-[#242372] px-[10px] py-[8px] rounded-[10px] md:px-[20px] md:py-[10px]'
                         whileHover={buttonHoverEffect}
                     >
                         اتصل بنا ←
                     </motion.a>
                     <motion.a 
-                        href='#' 
+                        href='/faq' 
                         className='hover-zoom btn-gradient relative medium-text text-white px-[20px] py-[10px] rounded-[10px]'
                         whileHover={buttonHoverEffect}
                     >
