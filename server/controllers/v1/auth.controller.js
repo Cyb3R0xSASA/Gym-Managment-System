@@ -2,7 +2,7 @@ import { methodError } from '../../middlewares/error/method.error.js';
 import Plan from '../../models/plan.models.js';
 import User from '../../models/user.models.js';
 import JWTMethods from '../../utils/jwt.js';
-import {errorMessage} from '../../utils/error.js';
+import { errorMessage } from '../../utils/error.js';
 import { HTTP_STATUS } from '../../config/constants.js';
 import { otpGenerator, deleteOTP } from '../../utils/otp.js';
 import bcrypt from 'bcrypt';
@@ -11,22 +11,22 @@ import { Types } from 'mongoose';
 
 const register = methodError(
     async (req, res, next) => {
-        const {planId, planType, ...userData} = req.body;
+        const { planId, planType, ...userData } = req.body;
         let code = req.body.code || 'user';
         let role = 'sasa';
 
-        if(planId && planType) {
+        if (planId && planType) {
             const isId = Types.ObjectId.isValid(planId);
-            if(!isId) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 'mw56yn26'));
+            if (!isId) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 'mw56yn26'));
             const plan = await Plan.findById(planId);
-            if(!plan) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+            if (!plan) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
             role = 'admin';
         };
 
-        const user = await User.findOne({email: userData.email});
-        if(user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+        const user = await User.findOne({ email: userData.email });
+        if (user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
 
-        if(['employee', 'trainer'].includes(code)) {
+        if (['employee', 'trainer'].includes(code)) {
             const codeEncryption = JWTMethods.verifyToken(code, 'ROLE');
             if (codeEncryption && codeEncryption.role === 'employee') role = 'employee'
             else if (codeEncryption && codeEncryption.role === 'trainer') role = 'trainer';
@@ -36,11 +36,11 @@ const register = methodError(
         if (role !== 'admin') {
             // Add gym if not admin
         }
-    
-        const newUser = await User.create({...userData, role, plan: planId, planType});
+
+        const newUser = await User.create({ ...userData, role, plan: planId, planType });
         await otpGenerator(newUser, next, 'Verify Email');
-        const accessToken = JWTMethods.generateToken({id: newUser._id, role}, 'SECRET', '15m');
-        const refreshToken = JWTMethods.generateToken({id: newUser._id, role}, 'REFRESH', '7d');
+        const accessToken = JWTMethods.generateToken({ id: newUser._id, role }, 'SECRET', '15m');
+        const refreshToken = JWTMethods.generateToken({ id: newUser._id, role }, 'REFRESH', '7d');
         await JWTMethods.storeToken(`refresh_token:${newUser._id}`, refreshToken, 7 * 24 * 60 * 60);
         JWTMethods.setCookies(res, accessToken, refreshToken);
 
@@ -58,7 +58,7 @@ const verifyEmail = methodError(
         const attemptsKey = `otp_attempts:${user._id}`;
         const otpVerification = await redis.get(otpKey);
 
-        if(await redis.get(attemptsKey) >= 5) {
+        if (await redis.get(attemptsKey) >= 5) {
             await redis.del(otpKey);
             return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Too many failed attempts.'));
         }
@@ -84,49 +84,53 @@ const resendVerificationEmail = methodError(
     async (req, res, next) => {
         const { email } = req.body;
         const user = await User.findOne({ email });
-        if(user.isActive) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'User is already verified'));
         if (!user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
-        if(!await redis.get(`otp_key:${user._id}`)) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Resend OTP after 1 minute'));
+        if (user.isActive) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'User is already verified'));
+        if (!await redis.get(`otp_key:${user._id}`)) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Resend OTP after 1 minute'));
         await otpGenerator(user, next, 'Verify Email');
-        const accessToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'SECRET', '15m');
-        const refreshToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'REFRESH', '7d');
+        const accessToken = JWTMethods.generateToken({ id: user._id, role: user.role }, 'SECRET', '15m');
+        const refreshToken = JWTMethods.generateToken({ id: user._id, role: user.role }, 'REFRESH', '7d');
         await JWTMethods.storeToken(`refresh_token:${user._id}`, refreshToken, 7 * 24 * 60 * 60);
         JWTMethods.setCookies(res, accessToken, refreshToken);
-        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: {
-            accessToken,
-            refreshToken
-        }, message: 'Verification email sent successfully' });
+        res.status(200).json({
+            status: HTTP_STATUS.SUCCESS, data: {
+                accessToken,
+                refreshToken
+            }, message: 'Verification email sent successfully'
+        });
     }
 );
 
 const login = methodError(
     async (req, res, next) => {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
 
-        const user = await User.findOne({email}).select('+password');
-        if(!user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+        const user = await User.findOne({ email }).select('+password');
+        if (!user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
 
-        if(!user.isActive) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Account is not verified'));
+        if (!user.isActive) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'Account is not verified'));
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if(!isMatch) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, '2v7s2g5s'));
+        if (!isMatch) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, '2v7s2g5s'));
 
-        const accessToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'SECRET', '15m');
-        const refreshToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'REFRESH', '7d');
+        const accessToken = JWTMethods.generateToken({ id: user._id, role: user.role }, 'SECRET', '15m');
+        const refreshToken = JWTMethods.generateToken({ id: user._id, role: user.role }, 'REFRESH', '7d');
         await JWTMethods.storeToken(`refresh_token:${user._id}`, refreshToken, 7 * 24 * 60 * 60);
         JWTMethods.setCookies(res, accessToken, refreshToken);
 
-        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: {
-            accessToken,
-            refreshToken
-        }, message: 'Login successful' });
+        res.status(200).json({
+            status: HTTP_STATUS.SUCCESS, data: {
+                accessToken,
+                refreshToken
+            }, message: 'Login successful'
+        });
     }
 );
 
 const logout = methodError(
     async (req, res, next) => {
         const refreshToken = req.cookies.refreshToken;
-        if(!refreshToken) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+        if (!refreshToken) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
         await redis.del(`refresh_token:${req.user.id}`);
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
@@ -137,19 +141,22 @@ const logout = methodError(
 const refreshToken = methodError(
     async (req, res, next) => {
         const refreshToken = req.cookies.refreshToken;
-        if(!refreshToken) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+        console.log(refreshToken)
+        if (!refreshToken) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
 
         const decoded = JWTMethods.verifyToken(refreshToken, 'REFRESH');
-        if(!decoded) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
-        
+        if (!decoded) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+
         const user = await User.findById(decoded.id);
-        if(!user) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
-        const accessToken = JWTMethods.generateToken({id: user._id, role: user.role}, 'SECRET', '15m');
+        if (!user) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null));
+        const accessToken = JWTMethods.generateToken({ id: user._id, role: user.role }, 'SECRET', '15m');
         JWTMethods.setCookies(res, accessToken, refreshToken);
-        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: {
-            accessToken,
-            refreshToken
-        }, message: 'Login successful' });
+        res.status(200).json({
+            status: HTTP_STATUS.SUCCESS, data: {
+                accessToken,
+                refreshToken
+            }, message: 'Login successful'
+        });
     }
 );
 const forgotPassword = methodError();

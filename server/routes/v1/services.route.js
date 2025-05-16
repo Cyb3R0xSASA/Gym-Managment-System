@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import {Comments, createMessage} from '../controllers/services.controller.js';
-import ServicesValidation from '../middlewares/validation/services.validation.js';
+import {Comments, createMessage} from '../../controllers/v1/services.controller.js';
+import ServicesValidation from '../../middlewares/validation/services.validation.js';
 const router = Router();
 
 router.get('/comments', Comments.getComments);

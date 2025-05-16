@@ -1,0 +1,7 @@
+POST /api/v1/auth/register      => Client -> Done
+POST /api/v1/auth/verify-email  => Done
+POST /api/v1/auth/resend-otp    => Done
+POST /api/v1/auth/login         => Done
+POST /api/v1/auth/refresh-token => Done
+POST /api/v1/auth/logout        => Done
+GET /api/v1/services/comments

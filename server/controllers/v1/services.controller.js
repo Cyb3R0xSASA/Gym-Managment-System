@@ -1,6 +1,6 @@
-import { methodError } from '../middlewares/error/method.error.js';
-import { HTTP_STATUS } from '../config/constants.js';
-import { Comment, Message } from '../models/services.model.js';
+import { methodError } from '../../middlewares/error/method.error.js';
+import { HTTP_STATUS } from '../../config/constants.js';
+import { Comment, Message } from '../../models/services.model.js';
 
 const getComments = methodError(
     async (req, res) => {

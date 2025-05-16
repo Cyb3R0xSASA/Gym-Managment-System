@@ -7,7 +7,7 @@ import { OTHER, SERVER } from './config/constants.js';
 import { errorResponse } from './middlewares/error/method.error.js';
 import { routeError } from './middlewares/error/route.error.js';
 import connectDB from './config/db.conf.js';
-import serviceRouter from './routes/services.route.js';
+import serviceRouter from './routes/v1/services.route.js';
 import plansRouter from './routes/v1/plans.route.js';
 import authRouter from './routes/v1/auth.route.js';
 import gymRouter from './routes/v1/gym.route.js';
