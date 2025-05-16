@@ -19,7 +19,7 @@ ApiClient.interceptors.request.use((config) => {
 });
 
 ApiClient.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   (error) => {
     const formattedError = formatError(error);
     showError(formattedError.data.message, { closeButton: true });

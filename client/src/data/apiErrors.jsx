@@ -1,14 +1,14 @@
 const errors = {
-    'l2wa49h5': 'Error in inputs validation',
-    '9ka4gf04': 'Fields are required',
-    '85au6a0f': 'No plans found',
-    'lj63i2v4': 'Plan already exists',
-    's69j26pj': 'Plan not found',
-    'mw56yn26': 'Invalid id',
-    '2m12nj8k': 'User already exists',
-    'gy77yq24': 'User not found',
-    'o1t6ue44': 'Unauthorized access',
-    '2v7s2g5s': 'Incorrect email or password',
+    'l2wa49h5': 'خطأ فى المدخلات, الرجاء المحاولة مرة أخرى',
+    '9ka4gf04': 'هناك حقول فارغة',
+    '85au6a0f': 'ليس هناك خطط متاحة',
+    'lj63i2v4': 'هذه الخطة موجوده بالفعل',
+    's69j26pj': 'هذه الخطة غير موجوده',
+    'mw56yn26': 'معرف غير صالح',
+    '2m12nj8k': 'المستخدم موجود بالفعل',
+    'gy77yq24': 'المستخدم غير موجود',
+    'o1t6ue44': 'ليس لديك صلاحية الدخول',
+    '2v7s2g5s': 'البريد الإلكترونى أو كلمة المرور غير صحيحة',
 };
 
 export default errors;

@@ -3,19 +3,18 @@ import { Link } from "react-router";
 import { ChevronLeftIcon, EyeOff, Eye } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
 import { login } from "../../services/auth";
-import { showError, showSuccess } from "../ui/alert";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -28,9 +27,9 @@ export default function SignInForm() {
     }),
     onSubmit: async (values, { setSubmitting }) => {
         const res = await login(values);
-        showSuccess("تم تسجيل الدخول بنجاح 🎉");
-        // navigate("/dashboard")
-        showError(res.data.message || "فشل تسجيل الدخول");
+        const data = await res.data;
+        alert(data)
+        if(res.code == 1) navigate("/dashboard")
         setSubmitting(false);
     },
   });
