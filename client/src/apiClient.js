@@ -13,7 +13,7 @@ const ApiClient = axios.create({
 });
 
 ApiClient.interceptors.request.use((config) => {
-  // here we will handle authintication and authorization
+  
   return config;
 });
 

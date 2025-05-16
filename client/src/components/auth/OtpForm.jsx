@@ -6,12 +6,18 @@ import Label from "../form/Label";
 import { Link } from "react-router";
 import { ChevronLeftIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { verifyEmail } from "../../services/auth";
 
 export default function OtpForm() {
     const [searchParams] = useSearchParams();
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [timer, setTimer] = useState(60);
     const inputsRef = useRef([]);
+
+    async function verifyOtp(data) {
+        event.preventDefault();
+        await verifyEmail(data);
+    };
 
     useEffect(() => {
         const token = searchParams.get("token");
@@ -98,7 +104,7 @@ export default function OtpForm() {
             </div>
 
             {/* Submit Button */}
-            <Button className="w-full mt-4" size="sm">
+            <Button className="w-full mt-4" size="sm" onClick={() => {verifyOtp({otp : otp.join("")})}}>
             تأكيد الرمز
             </Button>
         </form>
