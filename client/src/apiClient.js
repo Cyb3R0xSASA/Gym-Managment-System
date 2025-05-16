@@ -1,4 +1,6 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import errors from "./data/apiErrors";
+import { showError } from "./components/ui/alert";
 
 // export const API_URL = "http://51.44.18.63:41431/api/v1";
 
@@ -13,21 +15,29 @@ const ApiClient = axios.create({
 });
 
 ApiClient.interceptors.request.use((config) => {
-  
   return config;
 });
 
 ApiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // error = formatError(error);
-    return error;
+    const formattedError = formatError(error);
+    showError(formattedError.data.message, { closeButton: true });
+    return Promise.reject(formattedError);
   }
 );
 
-// const formatError = (error) => {
-//   // here we will format the errors in a generalized format
-//   return error;
-// };
+const formatError = (err) => {
+  const errorResponse = {
+    code: err.response.data.code,
+    status: err.status,
+    data: {
+      data: err.response.data.data,
+      message: errors[err.response.data.message] ?? err.response.data.message,
+      status: err.response.data.status,
+    },
+  };
+  return errorResponse;
+};
 
 export default ApiClient;
