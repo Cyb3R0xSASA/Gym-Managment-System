@@ -12,7 +12,7 @@ import UnderConst from "./pages/UnderConstruction";
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
 import VerifyEmail from "./pages/auth/VerifyEmail";
-import { Toaster } from "./components/ui/sonner";
+import { Toaster } from "sonner";
 
 function App() {
   const location = useLocation();
@@ -26,7 +26,7 @@ function App() {
   return (
     <div dir="rtl" className="relative">
       <div className="pattern" />
-
+      <Toaster richColors position="top-center" dir="rtl" />
       {!hideLayout && <Header />}
 
       <Routes>
