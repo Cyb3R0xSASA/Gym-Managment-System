@@ -1,14 +1,27 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { Link } from "react-router";
 import { ChevronLeftIcon, EyeOff, Eye } from "lucide-react";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
+import { login } from "../../services/auth";
+import { toast } from "sonner";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    // const res = await login({
+    //   email: "elmohtarftop@gmail.com",
+    //   password: "LKs(#8Li3*",
+    // });
+    // const data = await res.data;
+    // console.log(data);
+  };
+
   return (
     <div className="flex flex-col flex-1">
       <div className="w-full max-w-md pt-10 mx-auto">
@@ -27,11 +40,12 @@ export default function SignInForm() {
               تسجيل الدخول
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              مرحباً بك من جديد, أدخل البريد الإلكترونى وكلمة المرور لتسجيل دخولك.
+              مرحباً بك من جديد, أدخل البريد الإلكترونى وكلمة المرور لتسجيل
+              دخولك.
             </p>
           </div>
           <div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-6">
                 <div>
                   <Label>
