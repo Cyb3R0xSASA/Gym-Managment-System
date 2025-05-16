@@ -7,3 +7,7 @@ export const verifyEmail = (data) => {
 export const register = (data) => {
     return ApiClient.post("auth/register", data);
 };
+
+export const login = (data) => {
+    return ApiClient.post("auth/login", data);
+};

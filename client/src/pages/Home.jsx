@@ -103,14 +103,12 @@ const Home = () => {
                     <Link 
                         to='/pricing' 
                         className='hover-zoom border border-white relative medium-text text-white px-[10px] py-[8px] rounded-[10px] md:px-[20px] md:py-[10px]'
-                        whileHover={buttonHoverEffect}
                     >
                         عرض الخدمات ←
                     </Link>
                     <Link 
                         to='/login' 
                         className='hover-zoom btn-gradient relative medium-text text-white px-[20px] py-[10px] rounded-[10px]'
-                        whileHover={buttonHoverEffect}
                     >
                         انضم الآن
                     </Link>
