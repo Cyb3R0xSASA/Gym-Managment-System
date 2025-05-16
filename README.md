@@ -1,5 +1,12 @@
-# Gym-Managment-System
+<p align="center">
+  <img src="https://www.trainix.site/images/trainix.png" width="100" alt="Trinex Logo" />
+</p>
 
-Full MERN Stack project using:
-- React + Vite (Frontend)
-- Express + MongoDB (Backend)
+<h1 align="center">Trainix | ترينيكس</h1>
+<p align="center">
+  نظام إدارة شامل للياقة البدنية والمدربين والصالات الرياضية
+  <br />
+  Modern Gym & Trainer Management Platform
+  <br /><br />
+  <a href="https://trainix.site"><strong>جرب الآن »</strong></a>
+</p>
