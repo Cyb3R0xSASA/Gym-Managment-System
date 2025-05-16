@@ -24,7 +24,7 @@ const register = methodError(
         };
 
         const user = await User.findOne({ email: userData.email });
-        if (user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+        if (user) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, '2m12nj8kj'));
 
         if (['employee', 'trainer'].includes(code)) {
             const codeEncryption = JWTMethods.verifyToken(code, 'ROLE');
@@ -44,7 +44,7 @@ const register = methodError(
         await JWTMethods.storeToken(`refresh_token:${newUser._id}`, refreshToken, 7 * 24 * 60 * 60);
         JWTMethods.setCookies(res, accessToken, refreshToken);
 
-        res.status(201).json({ status: HTTP_STATUS.SUCCESS, message: 'User created successfully' });
+        res.status(201).json({ status: HTTP_STATUS.SUCCESS, code: 1, message: 'User created successfully' });
     }
 );
 
@@ -76,7 +76,7 @@ const verifyEmail = methodError(
         await deleteOTP(user._id);
         await redis.del(attemptsKey);
 
-        res.status(200).json({ status: HTTP_STATUS.SUCCESS, message: 'Email verified successfully' });
+        res.status(200).json({ status: HTTP_STATUS.SUCCESS, code: 1, message: 'Email verified successfully' });
     }
 );
 
@@ -96,7 +96,9 @@ const resendVerificationEmail = methodError(
             status: HTTP_STATUS.SUCCESS, data: {
                 accessToken,
                 refreshToken
-            }, message: 'Verification email sent successfully'
+            },
+            code: 1,
+            message: 'Verification email sent successfully',
         });
     }
 );
@@ -122,7 +124,9 @@ const login = methodError(
             status: HTTP_STATUS.SUCCESS, data: {
                 accessToken,
                 refreshToken
-            }, message: 'Login successful'
+            },
+            code: 1,
+            message: 'Login successful'
         });
     }
 );
@@ -134,7 +138,7 @@ const logout = methodError(
         await redis.del(`refresh_token:${req.user.id}`);
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
-        res.status(200).json({ status: HTTP_STATUS.SUCCESS, data: null, message: 'Logout successful' });
+        res.status(200).json({ status: HTTP_STATUS.SUCCESS, code: 1, data: null, message: 'Logout successful' });
     }
 );
 
@@ -155,10 +159,13 @@ const refreshToken = methodError(
             status: HTTP_STATUS.SUCCESS, data: {
                 accessToken,
                 refreshToken
-            }, message: 'Login successful'
+            },
+            code: 1,
+            message: 'Login successful'
         });
     }
 );
+
 const forgotPassword = methodError();
 const resetPassword = methodError();
 

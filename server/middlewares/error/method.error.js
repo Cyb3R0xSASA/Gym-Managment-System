@@ -2,6 +2,7 @@ const errorResponse = (error, _, res, __) => {
     return res.status(error.statusCode || 400)
         .json({
             status: error.statusText,
+            code: error.status,
             message: error.message,
             data: error.data,
         });

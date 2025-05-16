@@ -1,4 +1,14 @@
-POST /api/v1/auth/register      => Client -> Done
+# Local
+POST /api/v1/auth/register      => Client -> Done / If user exist already send mail to it.
+POST /api/v1/auth/verify-email  => Done
+POST /api/v1/auth/resend-otp    => Done
+POST /api/v1/auth/login         => Done
+POST /api/v1/auth/refresh-token => Done
+POST /api/v1/auth/logout        => Done
+GET /api/v1/services/comments
+
+# Server
+POST /api/v1/auth/register      => Client -> Done / If user exist already send mail to it.
 POST /api/v1/auth/verify-email  => Done
 POST /api/v1/auth/resend-otp    => Done
 POST /api/v1/auth/login         => Done

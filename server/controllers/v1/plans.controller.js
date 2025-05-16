@@ -10,6 +10,7 @@ const getPlans = methodError(
         if (!plans || plans.length === 0) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, '85au6a0f'));
         res.status(200).json({
             status: HTTP_STATUS.SUCCESS,
+            code: 1,
             message: 'Plans fetched successfully',
             plans
         });
@@ -84,6 +85,7 @@ const updatePlan = methodError(
         const plan = await Plan.findOne({ _id: id }).select('-__v -createdAt -updatedAt');
         res.status(200).json({
             status: HTTP_STATUS.SUCCESS,
+            code: 1,
             message: 'Plan updated successfully',
             data: { plan }
         });
@@ -98,6 +100,7 @@ const deletePlan = methodError(
         await Plan.deleteOne({ _id: id });
         res.status(200).json({
             status: HTTP_STATUS.SUCCESS,
+            code: 1,
             message: 'Plan deleted successfully',
             data: null
         });

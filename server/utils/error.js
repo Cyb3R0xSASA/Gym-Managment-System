@@ -7,6 +7,7 @@ class AppError extends Error {
     create(statusText = HTTP_STATUS.ERROR, statusCode = 400, data=null, message=undefined) {
         this.statusText = statusText;
         this.statusCode = statusCode;
+        this.status = statusCode >= 200 && statusCode < 300 ? 1 : 0;  
         this.data = data;
         this.message = message;
         return this;
