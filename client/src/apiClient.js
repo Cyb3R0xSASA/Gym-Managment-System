@@ -20,14 +20,14 @@ ApiClient.interceptors.request.use((config) => {
 ApiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    error = formatError();
+    // error = formatError(error);
     return error;
   }
 );
 
-const formatError = (error) => {
-  // here we will format the errors in a generalized format
-  return error;
-};
+// const formatError = (error) => {
+//   // here we will format the errors in a generalized format
+//   return error;
+// };
 
 export default ApiClient;

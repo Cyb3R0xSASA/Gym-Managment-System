@@ -4,30 +4,28 @@ import { useSearchParams } from "react-router-dom";
 import Button from "../ui/button/Button";
 import Label from "../form/Label";
 import { Link } from "react-router";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { verifyEmail } from "../../services/auth";
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 
 export default function OtpForm() {
     const [searchParams] = useSearchParams();
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [timer, setTimer] = useState(60);
+    const [alert, setAlert] = useState({ type: "", message: "" });
     const inputsRef = useRef([]);
 
-    async function verifyOtp(data) {
-        event.preventDefault();
-        await verifyEmail(data);
-    };
-
+    // Get token from URL and autofill
     useEffect(() => {
         const token = searchParams.get("token");
         if (token && /^\d{6}$/.test(token)) {
-            setOtp(token.split(""));
-            inputsRef.current[5]?.focus();
+        setOtp(token.split(""));
+        inputsRef.current[5]?.focus();
         }
     }, [searchParams]);
 
-    // Handle timer countdown
+    // Timer countdown
     useEffect(() => {
         if (timer > 0) {
         const interval = setInterval(() => setTimer(prev => prev - 1), 1000);
@@ -35,17 +33,21 @@ export default function OtpForm() {
         }
     }, [timer]);
 
-    // Handle change of input
+    // Hide alert after 5 seconds
+    useEffect(() => {
+        if (alert.message) {
+        const timeout = setTimeout(() => setAlert({ type: "", message: "" }), 5000);
+        return () => clearTimeout(timeout);
+        }
+    }, [alert]);
+
+    // OTP input change handler
     const handleChange = (index, value) => {
-        if (!/^[0-9]?$/.test(value)) return; // allow only digits
+        if (!/^[0-9]?$/.test(value)) return;
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
-
-        // Auto move to next input
-        if (value && index < 5) {
-        inputsRef.current[index + 1]?.focus();
-        }
+        if (value && index < 5) inputsRef.current[index + 1]?.focus();
     };
 
     const handleKeyDown = (e, index) => {
@@ -58,20 +60,33 @@ export default function OtpForm() {
         setOtp(["", "", "", "", "", ""]);
         setTimer(60);
         inputsRef.current[0]?.focus();
-        // TODO: Call API to resend OTP
+        setAlert({ type: "success", message: "تم إرسال الرمز مرة أخرى إلى بريدك الإلكتروني" });
+        // TODO: Connect with API
+    };
+
+    const verifyOtp = async (e) => {
+        e.preventDefault();
+        try {
+        const response = await verifyEmail({ otp: otp.join("") });
+        const data = await response.response.data;
+        setAlert({ type: "success", message: data.message || "تم التحقق بنجاح" });
+        } catch (err) {
+        setAlert({ type: "error", message: err.response?.data?.msg || "فشل التحقق من الرمز" });
+        }
     };
 
     return (
         <div className="flex flex-col justify-center w-full max-w-md mx-auto">
-            <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
-                <Link
-                to="/"
-                className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                >
-                الرجوع إلى الصفحة الرئيسية
-                <ChevronLeftIcon className="size-5" />
-                </Link>
-            </div>
+        <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
+            <Link
+            to="/"
+            className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+            الرجوع إلى الصفحة الرئيسية
+            <ChevronLeftIcon className="size-5" />
+            </Link>
+        </div>
+
         <div className="mb-6">
             <h2 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white sm:text-title-md">
             أدخل رمز التحقق
@@ -81,30 +96,41 @@ export default function OtpForm() {
             </p>
         </div>
 
-        {/* OTP Inputs */}
-        <form>
+        {/* Alert message */}
+        {alert.message && (
+            <Alert variant={alert.type === "error" ? "destructive" : "default"} className="mb-4">
+            {alert.type === "error" ? (
+                <AlertCircle className="w-5 h-5 text-red-500" />
+            ) : (
+                <CheckCircle2 className="w-5 h-5 text-green-500" />
+            )}
+            <AlertTitle>{alert.type === "error" ? "خطأ" : "تم"}</AlertTitle>
+            <AlertDescription>{alert.message}</AlertDescription>
+            </Alert>
+        )}
+
+        <form onSubmit={verifyOtp}>
             <Label>رمز التحقق</Label>
-            <div className="flex justify-between gap-1 my-4" dir='ltr'>
+            <div className="flex justify-between gap-1 my-4" dir="ltr">
             {otp.map((digit, index) => (
                 <motion.input
-                    key={index}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength="1"
-                    value={digit}
-                    onChange={(e) => handleChange(index, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    ref={(el) => (inputsRef.current[index] = el)}
-                    className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] text-center text-lg border rounded-md bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2, duration: 1, ease: "easeOut" }}
+                key={index}
+                type="text"
+                inputMode="numeric"
+                maxLength="1"
+                value={digit}
+                onChange={(e) => handleChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                ref={(el) => (inputsRef.current[index] = el)}
+                className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] text-center text-lg border rounded-md bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2, duration: 1, ease: "easeOut" }}
                 />
             ))}
             </div>
 
-            {/* Submit Button */}
-            <Button className="w-full mt-4" size="sm" onClick={() => {verifyOtp({otp : otp.join("")})}}>
+            <Button className="w-full mt-4" size="sm" type="submit">
             تأكيد الرمز
             </Button>
         </form>
