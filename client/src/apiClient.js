@@ -1,6 +1,9 @@
 import axios from "axios";
 
-export const API_URL = "http://51.44.18.63:41431/api/v1";
+// export const API_URL = "http://51.44.18.63:41431/api/v1";
+
+// this is because cors is not enabled on the server
+export const API_URL = "/api/v1";
 
 const ApiClient = axios.create({
   baseURL: API_URL,
