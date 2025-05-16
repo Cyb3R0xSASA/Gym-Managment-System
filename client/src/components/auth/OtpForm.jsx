@@ -4,17 +4,23 @@ import { useSearchParams } from "react-router-dom";
 import Button from "../ui/button/Button";
 import Label from "../form/Label";
 import { Link } from "react-router";
-import { ChevronLeftIcon, AlertCircle, CheckCircle2 } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { verifyEmail } from "../../services/auth";
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
+import { showError, showSuccess } from "../../components/ui/alert";
 
 export default function OtpForm() {
     const [searchParams] = useSearchParams();
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [timer, setTimer] = useState(60);
-    const [alert, setAlert] = useState({ type: "", message: "" });
     const inputsRef = useRef([]);
+
+    useEffect(() => {
+        if (timer > 0) {
+        const interval = setInterval(() => setTimer(prev => prev - 1), 1000);
+        return () => clearInterval(interval);
+        }
+    }, [timer]);
 
     // Get token from URL and autofill
     useEffect(() => {
@@ -24,22 +30,6 @@ export default function OtpForm() {
         inputsRef.current[5]?.focus();
         }
     }, [searchParams]);
-
-    // Timer countdown
-    useEffect(() => {
-        if (timer > 0) {
-        const interval = setInterval(() => setTimer(prev => prev - 1), 1000);
-        return () => clearInterval(interval);
-        }
-    }, [timer]);
-
-    // Hide alert after 5 seconds
-    useEffect(() => {
-        if (alert.message) {
-        const timeout = setTimeout(() => setAlert({ type: "", message: "" }), 5000);
-        return () => clearTimeout(timeout);
-        }
-    }, [alert]);
 
     // OTP input change handler
     const handleChange = (index, value) => {
@@ -60,18 +50,19 @@ export default function OtpForm() {
         setOtp(["", "", "", "", "", ""]);
         setTimer(60);
         inputsRef.current[0]?.focus();
-        setAlert({ type: "success", message: "تم إرسال الرمز مرة أخرى إلى بريدك الإلكتروني" });
+        showSuccess("تم إرسال الرمز مرة أخرى إلى بريدك الإلكتروني");
         // TODO: Connect with API
     };
 
     const verifyOtp = async (e) => {
         e.preventDefault();
-        try {
+
         const response = await verifyEmail({ otp: otp.join("") });
         const data = await response.response.data;
-        setAlert({ type: "success", message: data.message || "تم التحقق بنجاح" });
-        } catch (err) {
-        setAlert({ type: "error", message: err.response?.data?.msg || "فشل التحقق من الرمز" });
+        if (response.code === 1) {
+            showSuccess("تم التحقق بنجاح!");
+        }else {
+            showError("رمز التحقق غير صحيح أو انتهت صلاحيته");
         }
     };
 
@@ -95,25 +86,12 @@ export default function OtpForm() {
             لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى بريدك الإلكتروني.
             </p>
         </div>
-
-        {/* Alert message */}
-        {alert.message && (
-            <Alert variant={alert.type === "error" ? "destructive" : "default"} className="mb-4">
-            {alert.type === "error" ? (
-                <AlertCircle className="w-5 h-5 text-red-500" />
-            ) : (
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-            )}
-            <AlertTitle>{alert.type === "error" ? "خطأ" : "تم"}</AlertTitle>
-            <AlertDescription>{alert.message}</AlertDescription>
-            </Alert>
-        )}
-
         <form onSubmit={verifyOtp}>
             <Label>رمز التحقق</Label>
             <div className="flex justify-between gap-1 my-4" dir="ltr">
             {otp.map((digit, index) => (
                 <motion.input
+                required
                 key={index}
                 type="text"
                 inputMode="numeric"
