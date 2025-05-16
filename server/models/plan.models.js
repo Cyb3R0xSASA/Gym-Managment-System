@@ -1,5 +1,5 @@
 import pkg from 'mongoose';
-const {model, models, Schema} = pkg;
+const { model, models, Schema } = pkg;
 
 const planSchema = new Schema({
     name: {
@@ -41,12 +41,21 @@ const planSchema = new Schema({
         required: true,
     },
     features: {
-        branches: {type: Number, required: true, min: 1},
-        employeesPerBranch: {type: Number, required: true, min: 1},
-        trainersPerBranch: {type: Number, required: true, min: 1},
-        clientsPerBranch: {type: Number, required: true, min: 1},
-    }
-}, {timestamps: true});
+        branches: { type: Number, required: true, min: 1 },
+        employeesPerBranch: { type: Number, required: true, min: 1 },
+        trainersPerBranch: { type: Number, required: true, min: 1 },
+        clientsPerBranch: { type: Number, required: true, min: 1 },
+    },
+    stripeProductId: {
+        type: String,
+        required: true,
+    },
+    stripePriceIds: {
+        monthly: { type: String, default: null },
+        semiAnnual: { type: String, default: null },
+        annual: { type: String, default: null },
+    },
+}, { timestamps: true });
 
 const Plan = models.Plan || model('Plan', planSchema);
-export default Plan
+export default Plan;

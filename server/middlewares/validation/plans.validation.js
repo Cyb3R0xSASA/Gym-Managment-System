@@ -2,8 +2,14 @@ import Joi from 'joi';
 import { validate } from '../../utils/validate.js';
 
 const planSchema = Joi.object({
-    name: Joi.object({ar: Joi.string().required(), en: Joi.string()}),
-    description: Joi.object({ar: Joi.string().required(), en: Joi.string()}),
+    name: Joi.object({
+        ar: Joi.string().min(1).max(250).required(),
+        en: Joi.string().min(1).max(250),
+    }),
+    description: Joi.object({
+        ar: Joi.string().min(1).max(2500).required(),
+        en: Joi.string().min(1).max(2500),
+    }),
     monthlyPrice: Joi.number().min(0).required(),
     semiAnnualPrice: Joi.number().min(0).required(),
     annualPrice: Joi.number().min(0).required(),

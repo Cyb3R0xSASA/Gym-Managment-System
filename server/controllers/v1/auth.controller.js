@@ -13,7 +13,7 @@ const register = methodError(
     async (req, res, next) => {
         const {planId, planType, ...userData} = req.body;
         let code = req.body.code || 'user';
-        let role = 'client';
+        let role = 'sasa';
 
         if(planId && planType) {
             const isId = Types.ObjectId.isValid(planId);
