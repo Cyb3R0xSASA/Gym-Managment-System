@@ -26,7 +26,7 @@ function App() {
   return (
     <div dir="rtl" className="relative">
       <div className="pattern" />
-      <Toaster richColors position="top-center" dir="rtl" />
+      <Toaster richColors position="top-center" dir="rtl" closeButton />
       {!hideLayout && <Header />}
 
       <Routes>
