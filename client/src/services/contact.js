@@ -1,5 +1,5 @@
 import ApiClient from "../apiClient";
 
-export const contactService = (data) =>  {
-    return ApiClient.post("services/message", data);
-}
+export const sendContactMessage = (data) => {
+  return ApiClient.post("services/message", data);
+};
