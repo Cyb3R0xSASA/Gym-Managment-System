@@ -2,13 +2,14 @@ import axios, { AxiosError } from "axios";
 import errors from "./data/apiErrors";
 import { showError } from "./components/ui/alert";
 
-// export const API_URL = "http://51.44.18.63:41431/api/v1";
+export const API_URL = "https://api.trainix.site/api/v1";
 
 // this is because cors is not enabled on the server
-export const API_URL = "/api/v1";
+// export const API_URL = "/api/v1";
 
 const ApiClient = axios.create({
   baseURL: API_URL,
+  credentials: "include",
   headers: {
     "Content-Type": "application/json",
   },
