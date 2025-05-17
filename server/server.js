@@ -2,8 +2,10 @@ import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.js';
 
-import { OTHER, SERVER } from './config/constants.js';
+import { SERVER } from './config/constants.js';
 import { errorResponse } from './middlewares/error/method.error.js';
 import { routeError } from './middlewares/error/route.error.js';
 import connectDB from './config/db.conf.js';
@@ -13,25 +15,30 @@ import authRouter from './routes/v1/auth.route.js';
 import gymRouter from './routes/v1/gym.route.js';
 import serviceRouter from './routes/v1/services.route.js';
 
+
 const app = express();
-
-app.use(cors({
-    origin: OTHER.CORS_ORIGIN,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
-app.use(morgan('dev'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cookieParser());
 app.use(json());
-app.use(urlencoded({ extended: true }));
 
+
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    credentials: true,
+}));
+
+app.use(urlencoded({ extended: true }));
+app.use(morgan('dev'));
 app.use('/api/v1/plans', plansRouter);
 app.use('/api/v1/payments', paymentRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/gym', gymRouter);
 app.use('/api/v1/services', serviceRouter);
+app.get('/docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
+
 app.get('/', (req, res) => {
     res.send('ربنا يكرمنا يا ونخلص علي خير');
 });
@@ -41,6 +48,6 @@ app.use(routeError);
 
 
 app.listen(SERVER.PORT, () => {
-    console.log(`Server is running on port ${SERVER.PORT}`);
+    console.log(`Server is running on localhost:${SERVER.PORT}`);
     connectDB();
 });

@@ -12,8 +12,9 @@ import { Types } from 'mongoose';
 const register = methodError(
     async (req, res, next) => {
         const { planId, planType, ...userData } = req.body;
+        console.log(userData)
         let code = req.body.code || 'user';
-        let role = 'sasa';
+        let role = 'client';
 
         if (planId && planType) {
             const isId = Types.ObjectId.isValid(planId);

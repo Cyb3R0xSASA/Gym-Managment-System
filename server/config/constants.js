@@ -24,6 +24,7 @@ const JWT = {
 const STRIPE = {
   SECRET: process.env.STRIPE_SECRET_KEY,
   PUBLIC: process.env.STRIPE_PUBLIC_KEY,
+  WEBHOOK: process.env.STRIPE_WEBHOOK_SECRET,
 };
 
 // EMAIL

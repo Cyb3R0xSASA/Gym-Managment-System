@@ -16,9 +16,6 @@ const register = Joi.object({
         phone: Joi.string().min(10).max(15),
         address: Joi.string().min(10).max(250),
         birthDate: Joi.date(),
-        height: Joi.number().min(100).max(300),
-        weight: Joi.number().min(30).max(300),
-        goal: Joi.string().valid('lose', 'gain', 'maintain'),
     }),
 })
 

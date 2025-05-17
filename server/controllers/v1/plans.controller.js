@@ -25,7 +25,6 @@ const addPlan = methodError(
         if (existingPlan)
             return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'lj63i2v4'));
 
-        // Create Stripe Product
         const stripeProduct = await stripe.products.create({
             name: name.en,
             description: description.en || '',

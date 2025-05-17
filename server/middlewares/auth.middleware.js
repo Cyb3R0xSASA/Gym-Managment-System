@@ -4,6 +4,7 @@ import { HTTP_STATUS } from "../config/constants.js";
 
 const protect = (req, res, next) => {
     const token = req.cookies.accessToken;
+    console.log('cookies: ', req.cookies.accessToken)
     if(!token) return next(errorMessage.create(HTTP_STATUS.UNAUTHORIZED, 401, null, 'o1t6ue44'));
 
     const decoded = JWTMethods.verifyToken(token, 'SECRET');
@@ -18,7 +19,7 @@ const role = (...roles) => {
         if(!roles.includes(req.user.role)) return next(errorMessage.create(HTTP_STATUS.UNAUTHORIZED, 401, null, 'o1t6ue44'));
         next();
     }
-}
+};
 
 const isActive = (req, res, next) => {
     const user = req.user;
