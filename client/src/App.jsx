@@ -13,6 +13,7 @@ import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import { Toaster } from "sonner";
+import Gyms from "./pages/Gyms";
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
         <Route path="/register" element={<SignUp />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/gyms" element={<Gyms />} />
         <Route path="/testemonials" element={<Testemonials />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

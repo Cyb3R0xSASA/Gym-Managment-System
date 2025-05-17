@@ -56,7 +56,7 @@ export default function OtpForm() {
 
     const verifyOtp = async (e) => {
         e.preventDefault();
-
+        console.log(document.cookie)
         const response = await verifyEmail({ otp: otp.join("") });
         const data = await response.response.data;
         if (response.code === 1) {
