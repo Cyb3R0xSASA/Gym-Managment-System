@@ -27,8 +27,6 @@ export default function SignInForm() {
     }),
     onSubmit: async (values, { setSubmitting }) => {
         const res = await login(values);
-        const data = await res.data;
-        alert(data)
         if(res.code == 1) navigate("/dashboard")
         setSubmitting(false);
     },
