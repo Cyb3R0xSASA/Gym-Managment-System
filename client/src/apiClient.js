@@ -9,7 +9,7 @@ export const API_URL = "https://api.trainix.site/api/v1";
 
 const ApiClient = axios.create({
   baseURL: API_URL,
-  credentials: "include",
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
