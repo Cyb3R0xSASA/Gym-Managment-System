@@ -2,8 +2,8 @@ import Joi from "joi";
 import { validate } from "../../utils/validate.js";
 
 const register = Joi.object({
-    firstName: Joi.string().required().min(1).max(250),
-    lastName: Joi.string().required().min(1).max(250),
+    firstName: Joi.string().required().min(1).max(50),
+    lastName: Joi.string().required().min(1).max(50),
     email: Joi.string().email().required(),
     password: Joi.string().required().min(8).max(128)
         .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])')),
@@ -21,6 +21,7 @@ const register = Joi.object({
 
 const verifyEmail = Joi.object({
     otp: Joi.number().required(),
+    email: Joi.string().email().required(),
 })
 
 const resendVerificationEmail = Joi.object({

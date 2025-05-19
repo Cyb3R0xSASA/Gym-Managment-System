@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import Gyms from '../../controllers/v1/gym.controller.js';
 import { protect, role } from '../../middlewares/auth.middleware.js';
-import checkId from '../../middlewares/checkId.js';
+// import { checkId } from '../../middlewares/checkId.js';
 import GymValidation from '../../middlewares/validation/gym.validation.js';
 const router = Router();
 

@@ -1,5 +1,5 @@
 import { methodError } from '../../middlewares/error/method.error.js';
-import { errorMessage } from '../../utils/error.js';
+import { sendError, sendSuccess } from '../../utils/error.js';
 import { HTTP_STATUS } from '../../config/constants.js';
 import Plan from '../../models/plan.models.js';
 import stripe from '../../config/stripe.conf.js';
@@ -7,13 +7,21 @@ import stripe from '../../config/stripe.conf.js';
 const getPlans = methodError(
     async (req, res, next) => {
         const plans = await Plan.find().select('-__v -createdAt -updatedAt -stripeProductId -stripePriceIds');
-        if (!plans || plans.length === 0) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, '85au6a0f'));
-        res.status(200).json({
-            status: HTTP_STATUS.SUCCESS,
-            code: 1,
-            message: 'Plans fetched successfully',
-            plans
-        });
+        if (!plans || plans.length === 0) {
+            return sendError(
+                res,
+                "No plans exist.",
+                "NO_PLANS_AVAILABLE",
+                HTTP_STATUS.NOT_FOUND
+            );
+        }
+
+        return sendSuccess(
+            res,
+            'Plans fetched successfully',
+            plans,
+            200
+        );
     }
 );
 
@@ -22,8 +30,14 @@ const addPlan = methodError(
         const { name, description, monthlyPrice, semiAnnualPrice, annualPrice, semiAnnualDiscount, annualDiscount, features } = req.body;
 
         const existingPlan = await Plan.findOne({ 'name.ar': 'name.ar', 'name.en': name.en });
-        if (existingPlan)
-            return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, 'lj63i2v4'));
+        if (existingPlan) {
+            return sendError(
+                res,
+                'Plan Already Exist before.',
+                'PLAN_EXIST',
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
 
         const stripeProduct = await stripe.products.create({
             name: name.en,
@@ -61,16 +75,18 @@ const addPlan = methodError(
             }
         });
 
-        res.status(201).json({
-            status: HTTP_STATUS.SUCCESS,
-            message: 'Plan created successfully',
-            data: {
+        sendSuccess(
+            res,
+            'Plan created successfully',
+            {
                 name: plan.name,
                 description: plan.description,
                 stripeProductId: plan.stripeProductId,
                 stripePriceIds: plan.stripePriceIds,
-            }
-        });
+            },
+            201
+        );
+        next();
     }
 );
 
@@ -79,15 +95,23 @@ const updatePlan = methodError(
         const { id } = req.params;
         const data = req.body;
         const existingPlan = await Plan.findOne({ _id: id });
-        if (!existingPlan) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+        if (!existingPlan) {
+            return sendError(
+                res,
+                'Plan Not Exist',
+                'NO_PLAN_AVAILABLE',
+                400,
+            )
+        }
         await Plan.updateOne({ _id: id }, { ...data });
         const plan = await Plan.findOne({ _id: id }).select('-__v -createdAt -updatedAt');
-        res.status(200).json({
-            status: HTTP_STATUS.SUCCESS,
-            code: 1,
-            message: 'Plan updated successfully',
-            data: { plan }
-        });
+        sendSuccess(
+            res,
+            'Plan updated successfully',
+            { plan },
+            200,
+        );
+        next();
     }
 );
 
@@ -95,14 +119,21 @@ const deletePlan = methodError(
     async (req, res, next) => {
         const { id } = req.params;
         const existingPlan = await Plan.findOne({ _id: id });
-        if (!existingPlan) return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 's69j26pj'));
+        if (!existingPlan) {
+            return sendError(
+                res,
+                'Plan Not Exist',
+                'NO_PLAN_AVAILABLE',
+                400,
+            )
+        };
         await Plan.deleteOne({ _id: id });
-        res.status(200).json({
-            status: HTTP_STATUS.SUCCESS,
-            code: 1,
-            message: 'Plan deleted successfully',
-            data: null
-        });
+        sendSuccess(
+            res,
+            'Plan deleted successfully',
+            null,
+            200,
+        )
     }
 );
 

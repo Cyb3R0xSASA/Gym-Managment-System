@@ -1,12 +1,15 @@
-import { Types } from 'mongoose';
-import { HTTP_STATUS } from '../config/constants.js';
-import { errorMessage } from '../utils/error.js';
+import { Types } from "mongoose";
+import { sendError } from "../utils/error.js";
 
-const checkId = (req, _, next) => {
-    const { id } = req.params;
-    if(!Types.ObjectId.isValid(id)) 
-        return next(errorMessage.create(HTTP_STATUS.NOT_FOUND, 404, null, 'mw56yn26'));
-    next();
-};
-
-export default checkId;
+export const checkId = (req, res, next, id) => {
+    const ID = req?.params?.id || id;
+    if(!Types.ObjectId.isValid(ID)){
+        return sendError(
+            res,
+            "Invalid resource identifier.",
+            "INVALID_ID",
+            HTTP_STATUS.BAD_REQUEST,
+            [`Invalid ObjectId: ${ID}`],
+        );
+    };
+}

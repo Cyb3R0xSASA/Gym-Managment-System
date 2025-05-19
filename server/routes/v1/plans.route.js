@@ -1,27 +1,95 @@
 import { Router } from 'express';
 import Plans from '../../controllers/v1/plans.controller.js';
 import PlansValidation from '../../middlewares/validation/plans.validation.js';
-import checkId from '../../middlewares/checkId.js';
+import { checkId } from '../../middlewares/checkId.js';
 import { protect, role } from '../../middlewares/auth.middleware.js';
 
 const router = Router();
 
 /**
  * @openapi
- * /plans:
+ * /api/v1/plans:
  *   get:
  *     summary: Retrieve all subscription plans
  *     tags:
  *       - Plans
  *     responses:
- *       '200':
- *         description: A list of plans
+ *       200:
+ *         description: Plans fetched successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Plan'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Plans fetched successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: 68271c8bedc2ce0e37773e8c
+ *                       name:
+ *                         type: object
+ *                         properties:
+ *                           ar:
+ *                             type: string
+ *                             example: مجانية
+ *                           en:
+ *                             type: string
+ *                             example: Free
+ *                       description:
+ *                         type: object
+ *                         properties:
+ *                           ar:
+ *                             type: string
+ *                             example: خطة تجريبية لمدة 7 أيام...
+ *                           en:
+ *                             type: string
+ *                             example: A 7-day trial plan...
+ *                       features:
+ *                         type: object
+ *                         properties:
+ *                           branches:
+ *                             type: number
+ *                             example: 1
+ *                           employeesPerBranch:
+ *                             type: number
+ *                             example: 1
+ *                           trainersPerBranch:
+ *                             type: number
+ *                             example: 1
+ *                           clientsPerBranch:
+ *                             type: number
+ *                             example: 15
+ *                       monthlyPrice:
+ *                         type: number
+ *                         example: 0
+ *                       semiAnnualPrice:
+ *                         type: number
+ *                         example: 0
+ *                       annualPrice:
+ *                         type: number
+ *                         example: 0
+ *                       semiAnnualDiscount:
+ *                         type: number
+ *                         example: 0
+ *                       annualDiscount:
+ *                         type: number
+ *                         example: 0
+ *       404:
+ *         description: No plans found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *                  
  *   post:
  *     summary: Create a new subscription plan
  *     tags:
@@ -40,7 +108,7 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/PlanInput'
+ *             $ref: '#/components/schemas/ErrorResponse'
  *     responses:
  *       '201':
  *         description: Plan created

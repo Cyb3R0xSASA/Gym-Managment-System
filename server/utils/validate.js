@@ -1,11 +1,18 @@
-import { errorMessage } from './error.js';
+import { sendError } from './error.js';
 import { HTTP_STATUS } from '../config/constants.js';
 
 const validate = (schema) => {
-    return (req, _, next) => {
+    return (req, res, next) => {
         const { error } = schema.validate(req.body);
-        const message = error ? 'l2wa49h5': '9ka4gf04';
-        if (error || !req.body) return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 400, null, message));
+        if (error || !req.body) {
+            return sendError(
+                res,
+                'Enter fields error',
+                'FIELDS_ERROR',
+                400,
+                error ? error.details.map(message => message.message.replaceAll('"', '')) : "Enter data",
+            )
+        }
         next();
     }
 }

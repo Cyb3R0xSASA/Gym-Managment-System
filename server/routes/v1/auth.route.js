@@ -5,7 +5,7 @@ import { protect } from '../../middlewares/auth.middleware.js';
 const router = Router();
 
 router.post('/register', AuthValidation.register, Auth.register);
-router.post('/verify-email', protect, AuthValidation.verifyEmail, Auth.verifyEmail);
+router.post('/verify-email', AuthValidation.verifyEmail, Auth.verifyEmail);
 router.post('/resend-otp', AuthValidation.resendVerificationEmail, Auth.resendVerificationEmail);
 router.post('/login', AuthValidation.login, Auth.login);
 router.post('/logout',protect, Auth.logout);

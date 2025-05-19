@@ -6,32 +6,38 @@ import { transporter } from "../config/smtp.conf.js";
 import { HTTP_STATUS, OTP_CONF, OTHER, SMTP } from "../config/constants.js";
 import { randomOTPGenerator } from "./random.js";
 import { fileURLToPath } from 'url';
-import { errorMessage } from "./error.js";
+import { sendError } from "./error.js";
 
 const otpGenerator = async (user, next, subject) => {
     const limitKey = `otp_limit:${user.id}`;
     const otpKey = `otp_key:${user.id}`;
-    const attempts = await redis.get(limitKey);
     const coolDownKey = `otp_cooldown:${user.id}`;
-    
-    if (await redis.exists(coolDownKey))
-        return next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 429, {waitTime: await redis.ttl(coolDownKey)}, `Too many requests, please try again after ${await redis.ttl(coolDownKey)} seconds`));
 
-    if(attempts && attempts === OTP_CONF.MAX_OTP_PER_DAY){
-        await redis.del(otpKey);
-        next(errorMessage.create(HTTP_STATUS.BAD_REQUEST, 429, null, { message: 'You reached for max requests of OTP for today' }));
+    const isCooldown = await redis.exists(coolDownKey);
+    if (isCooldown) {
+        const waitTime = await redis.ttl(coolDownKey);
+        return sendError(next, HTTP_STATUS.TOO_MANY_REQUESTS, `Too many requests. Please try again after ${waitTime} seconds.`, "otp_cooldown", { waitTime });
     }
+
+    const attempts = await redis.get(limitKey);
+    if (attempts && Number(attempts) >= OTP_CONF.MAX_OTP_PER_DAY) {
+        await redis.del(otpKey);
+        return sendError(next, HTTP_STATUS.TOO_MANY_REQUESTS, "You have reached the maximum number of OTP requests for today.", "otp_daily_limit");
+    }
+
     const otp = randomOTPGenerator();
     await redis.set(otpKey, hashSync(otp, genSaltSync(10)), 'EX', OTP_CONF.OTP_TTL_SECONDS);
     await redis.incr(limitKey);
-    if(!attempts) 
+
+    if (!attempts) {
         await redis.expire(limitKey, OTP_CONF.OTP_LIMIT_TTL);
+    }
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const templatePath = path.join(__dirname, '../services/emails/email.ejs');
 
-    const html = await renderFile(templatePath, { 
+    const html = await renderFile(templatePath, {
         subject,
         otp,
         userName: `${user.firstName} ${user.lastName}`,
@@ -50,8 +56,8 @@ const otpGenerator = async (user, next, subject) => {
                 cid: 'trainixLogo'
             }
         ]
-    }
-    
+    };
+
     await transporter.sendMail(mailOptions);
     await redis.set(coolDownKey, '1', 'EX', OTP_CONF.COOLDOWN_SECONDS);
 };

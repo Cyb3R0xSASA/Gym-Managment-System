@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Trainix API
+  version: 1.0.0
+  description: Endpoints for Plans, Branches, Employees, Clients, etc.
+servers:
+  - url: https://trainix.site/api/v1
+    description: Production
+  - url: http://localhost:41431/api/v1
+    description: Local dev
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Unauthorized
+        errorCode:
+          type: string
+          example: 
+        errors:
+          type: object
+          example: ['Plan Type Not Exist']
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Create Admin User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - email
+                - password
+                - gender
+                - planId
+                - planType
+              properties:
+                firstName:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                  description: Must be between 2 and 50 characters.
+                  example: Danah
+                lastName:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                  description: Must be between 2 and 50 characters.
+                  example: Almurwhan
+                email:
+                  type: string
+                  format: email
+                  example: johndoe@mail.com
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 128
+                  pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,128}$'
+                  description: Must be strong password.
+                  example: KU3Jb^Jt$4hd10.
+                gender:
+                  type: string
+                  enum: [male, female]
+                  example: female
+                planId:
+                  type: string
+                  format: uuid
+                  example: 82b84e5019c0ea6d1191ef2a
+                planType:
+                  type: string
+                  enum: [monthly, semiAnnual, annual]
+                  example: monthly
+      responses:
+        201:
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Account created successfully. Please verify your email.
+                  data:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: Danah
+                      lastName:
+                        type: string
+                        example: Almurwhan
+                      accessToken:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                      refreshToken:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        400:
+          description: Validation or plan-related error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
