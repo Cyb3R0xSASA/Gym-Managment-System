@@ -2,6 +2,7 @@ import React, { Suspense, useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { getPlans } from "@/services/plans";
 import Spinner from "../ui/spinner";
+import { useNavigate } from "react-router-dom";
 
 const frequencies = [
   { label: "شهرياً", key: "monthly" },
@@ -12,6 +13,7 @@ const frequencies = [
 export default function PricingPlans() {
   const [billing, setBilling] = useState("monthly");
   const [plans, setPlans] = useState([]);
+  const navigate = useNavigate();
 
   const formatPlansPricing = useCallback(
     (plans) => {
@@ -31,10 +33,14 @@ export default function PricingPlans() {
   useEffect(() => {
     (async () => {
       const data = await getPlans();
-      const formatedPlans = formatPlansPricing(data.plans);
+      const formatedPlans = formatPlansPricing(data.data);
       setPlans(formatedPlans);
     })();
   }, []);
+
+  const handleSubscription = (planId) => {
+    navigate(`/admin_register?planId=${planId}&planType=${billing}`);
+  };
 
   return (
     <div className="flex flex-col items-center py-[40px] px-[20px] gap-[40px]">
@@ -72,6 +78,7 @@ export default function PricingPlans() {
               </ul>
             </div>
             <button
+              onClick={() => handleSubscription(plan._id)}
               className={clsx(
                 "mt-[20px] w-full py-[8px] rounded-[10px] small-text transition cursor-pointer",
                 plan.name.en === "Premium"

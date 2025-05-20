@@ -14,6 +14,9 @@ import SignUp from "./pages/auth/SignUp";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import { Toaster } from "sonner";
 import Gyms from "./pages/Gyms";
+import AdminRegister from "./pages/auth/AdminRegister";
+import ResetPassword from "./pages/auth/ResetPassword";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 function App() {
   const location = useLocation();
@@ -22,6 +25,9 @@ function App() {
     "/register",
     "/admin",
     "/verify-email",
+    "/admin_register",
+    "/reset-password",
+    "/forgot-password",
   ].includes(location.pathname);
 
   return (
@@ -38,6 +44,9 @@ function App() {
         <Route path="/faq" element={<Faq />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
+        <Route path="/admin_register" element={<AdminRegister />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/gyms" element={<Gyms />} />
